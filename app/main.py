@@ -33,17 +33,13 @@ app.add_middleware(
 )
 
 # Base directories
-STATIC_DIR = os.path.join(settings.base_dir, "app", "static")
-TEMPLATES_DIR = os.path.join(settings.base_dir, "app", "templates")
-
-# Ensure static directories exist
-os.makedirs(STATIC_DIR, exist_ok=True)
-os.makedirs(os.path.join(STATIC_DIR, "css"), exist_ok=True)
-os.makedirs(os.path.join(STATIC_DIR, "js"), exist_ok=True)
-os.makedirs(TEMPLATES_DIR, exist_ok=True)
+CSS_DIR = os.path.join(settings.base_dir, "css")
+JS_DIR = os.path.join(settings.base_dir, "js")
+TEMPLATES_DIR = settings.base_dir
 
 # Mount static files
-app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+app.mount("/css", StaticFiles(directory=CSS_DIR), name="css")
+app.mount("/js", StaticFiles(directory=JS_DIR), name="js")
 
 # Templates configuration
 templates = Jinja2Templates(directory=TEMPLATES_DIR)

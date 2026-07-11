@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduGenie - AI-Powered Educational Assistant</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Background Glow Elements -->
+    <div class="glow-bg">
+        <div class="glow-circle glow-purple"></div>
+        <div class="glow-circle glow-teal"></div>
+        <div class="glow-circle glow-blue"></div>
+    </div>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i data-lucide="sparkles" class="logo-icon"></i>
+                    <span>EduGenie</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-tab="dashboard">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </button>
+                <button class="nav-item" data-tab="explain">
+                    <i data-lucide="book-open"></i>
+                    <span>Concept Explainer</span>
+                </button>
+                <button class="nav-item" data-tab="qa">
+                    <i data-lucide="message-square"></i>
+                    <span>AI Q&A</span>
+                </button>
+                <button class="nav-item" data-tab="quiz">
+                    <i data-lucide="help-circle"></i>
+                    <span>Quiz Generator</span>
+                </button>
+                <button class="nav-item" data-tab="summarize">
+                    <i data-lucide="file-text"></i>
+                    <span>Summarizer</span>
+                </button>
+                <button class="nav-item" data-tab="recommend">
+                    <i data-lucide="map"></i>
+                    <span>Roadmap Planner</span>
+                </button>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="system-status">
+                    <div class="status-indicator" id="api-status-dot"></div>
+                    <span id="api-status-text">Connecting...</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="content-header">
+                <div class="header-title">
+                    <h1 id="page-title">Dashboard</h1>
+                    <p id="page-subtitle" class="text-secondary">Welcome to EduGenie, your interactive learning assistant.</p>
+                </div>
+                <div class="header-actions">
+                    <div class="model-badge gemini-badge">
+                        <span class="badge-dot pulse"></span>
+                        <span>Gemini 1.5 Pro</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Tabs Section -->
+            <div class="tab-container">
+                <!-- 1. Dashboard Tab -->
+                <section class="tab-content active" id="tab-dashboard">
+                    <div class="welcome-card card">
+                        <h2>Supercharge Your Learning Journey 🚀</h2>
+                        <p>EduGenie harnesses cutting-edge artificial intelligence to synthesize complex concepts, generate study materials, and personalize your educational roadmap. Select a tool from the sidebar or click below to start.</p>
+                        <div class="dashboard-grid">
+                            <div class="action-card card" data-action="explain">
+                                <div class="action-icon explain-bg"><i data-lucide="book-open"></i></div>
+                                <h3>Concept Explainer</h3>
+                                <p>Simplify deep subjects into tailored explanations for any level.</p>
+                            </div>
+                            <div class="action-card card" data-action="qa">
+                                <div class="action-icon qa-bg"><i data-lucide="message-square"></i></div>
+                                <h3>AI Q&A</h3>
+                                <p>Ask homework or research questions and get instant reasoning answers.</p>
+                            </div>
+                            <div class="action-card card" data-action="quiz">
+                                <div class="action-icon quiz-bg"><i data-lucide="help-circle"></i></div>
+                                <h3>Quiz Generator</h3>
+                                <p>Test your knowledge with custom interactive multiple-choice tests.</p>
+                            </div>
+                            <div class="action-card card" data-action="summarize">
+                                <div class="action-icon summarize-bg"><i data-lucide="file-text"></i></div>
+                                <h3>Text Summarizer</h3>
+                                <p>Condense textbook chapters or research papers into summaries & key takeaways.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="status-panel card">
+                        <h3><i data-lucide="activity"></i> System Configuration & Health</h3>
+                        <div class="status-list">
+                            <div class="status-row">
+                                <span>Gemini Cloud API</span>
+                                <span class="badge" id="health-gemini">Checking...</span>
+                            </div>
+                            <div class="status-row">
+                                <span>LaMini Local NLP Model</span>
+                                <span class="badge" id="health-lamini">Checking...</span>
+                            </div>
+                            <div class="status-row">
+                                <span>Local Model ID</span>
+                                <code id="health-model-id">Loading...</code>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. Concept Explainer Tab -->
+                <section class="tab-content" id="tab-explain">
+                    <div class="card form-container">
+                        <h2><i data-lucide="book-open"></i> Explaining Complex Concepts</h2>
+                        <p class="description">Enter a scientific topic, historical event, or complex idea, and select your difficulty preference.</p>
+                        
+                        <form id="form-explain" class="edu-form">
+                            <div class="form-group">
+                                <label for="explain-concept">Concept Topic</label>
+                                <input type="text" id="explain-concept" placeholder="e.g., Quantum Computing, Photosynthesis, Black Holes" required autocomplete="off">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Learning Level</label>
+                                <div class="segmented-control">
+                                    <input type="radio" name="explain-level" id="level-beginner" value="beginner">
+                                    <label for="level-beginner">Beginner (Child/Simple)</label>
+                                    
+                                    <input type="radio" name="explain-level" id="level-intermediate" value="intermediate" checked>
+                                    <label for="level-intermediate">Intermediate (Student)</label>
+                                    
+                                    <input type="radio" name="explain-level" id="level-advanced" value="advanced">
+                                    <label for="level-advanced">Advanced (Academic)</label>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i data-lucide="wand-2"></i> Explain Concept
+                            </button>
+                        </form>
+                    </div>
+
+                    <div id="explain-output" class="output-container card hide">
+                        <div class="output-header">
+                            <h3 id="explain-output-title">Explanation</h3>
+                            <span class="badge badge-accent" id="explain-output-badge">Intermediate</span>
+                        </div>
+                        <div class="output-body">
+                            <div class="section-pane">
+                                <h4>Explanation</h4>
+                                <div id="explain-text" class="text-content"></div>
+                            </div>
+                            <div class="section-pane grid-2">
+                                <div class="sub-pane">
+                                    <h4><i data-lucide="smile"></i> Analogy</h4>
+                                    <p id="explain-analogy" class="analogy-text"></p>
+                                </div>
+                                <div class="sub-pane">
+                                    <h4><i data-lucide="list"></i> Key Vocabulary</h4>
+                                    <div id="explain-vocab" class="vocab-list"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. AI Q&A Tab -->
+                <section class="tab-content" id="tab-qa">
+                    <div class="card form-container">
+                        <h2><i data-lucide="message-square"></i> Intelligent Q&A</h2>
+                        <p class="description">Ask a homework question or double-check an educational query. Choose between our cloud-based Gemini or a locally run T5 model.</p>
+                        
+                        <form id="form-qa" class="edu-form">
+                            <div class="form-group">
+                                <label for="qa-question">Your Question</label>
+                                <textarea id="qa-question" placeholder="e.g., Why is the sky blue? How do cells convert energy? What is Euler's constant?" rows="3" required></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Model Selection</label>
+                                <div class="model-selector-group">
+                                    <div class="model-option">
+                                        <input type="radio" name="qa-model" id="qa-gemini" value="gemini" checked>
+                                        <label for="qa-gemini">
+                                            <div class="model-option-content">
+                                                <strong>Gemini 1.5 Pro</strong>
+                                                <span>Cloud-powered, advanced reasoning & comprehensive answers.</span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                    <div class="model-option">
+                                        <input type="radio" name="qa-model" id="qa-lamini" value="lamini">
+                                        <label for="qa-lamini">
+                                            <div class="model-option-content">
+                                                <strong>LaMini-Flan-T5 (Local)</strong>
+                                                <span>Runs directly on your CPU. Fast, private, good for short answers.</span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i data-lucide="send"></i> Ask Question
+                            </button>
+                        </form>
+                    </div>
+
+                    <div id="qa-output" class="output-container card hide">
+                        <div class="output-header">
+                            <h3>Response</h3>
+                            <span class="badge" id="qa-output-badge">Gemini</span>
+                        </div>
+                        <div class="output-body">
+                            <div id="qa-text" class="text-content"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. Quiz Generator Tab -->
+                <section class="tab-content" id="tab-quiz">
+                    <div class="card form-container" id="quiz-setup-container">
+                        <h2><i data-lucide="help-circle"></i> Create an Interactive Quiz</h2>
+                        <p class="description">Generate multiple-choice quizzes on any academic topic to challenge your knowledge.</p>
+                        
+                        <form id="form-quiz" class="edu-form">
+                            <div class="form-group">
+                                <label for="quiz-topic">Quiz Topic</label>
+                                <input type="text" id="quiz-topic" placeholder="e.g., Newtonian Mechanics, World War II, Cell Division" required autocomplete="off">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="quiz-count">Number of Questions</label>
+                                <select id="quiz-count">
+                                    <option value="3">3 Questions</option>
+                                    <option value="5" selected>5 Questions</option>
+                                    <option value="10">10 Questions</option>
+                                </select>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i data-lucide="puzzle"></i> Generate Quiz
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Interactive Quiz Runner -->
+                    <div id="quiz-runner-container" class="card hide">
+                        <div class="quiz-runner-header">
+                            <div>
+                                <span id="quiz-progress-label" class="quiz-progress-text">Question 1 of 5</span>
+                                <h3 id="quiz-runner-title">Topic: Photosynthesis</h3>
+                            </div>
+                            <div class="quiz-score-badge card">
+                                <span>Score:</span> <strong id="quiz-runner-score">0</strong>
+                            </div>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" id="quiz-progress-bar" style="width: 20%"></div>
+                        </div>
+                        
+                        <div class="quiz-question-panel">
+                            <h2 id="quiz-question-text" class="question-text">What green pigment in plants absorbs light?</h2>
+                            
+                            <div class="quiz-options-grid" id="quiz-options">
+                                <!-- Option cards generated via JS -->
+                            </div>
+                            
+                            <div id="quiz-explanation-card" class="quiz-explanation card hide">
+                                <h4><i data-lucide="info"></i> Explanation</h4>
+                                <p id="quiz-explanation-text"></p>
+                            </div>
+                            
+                            <div class="quiz-runner-actions">
+                                <button id="btn-quiz-next" class="btn btn-primary" disabled>
+                                    <span>Next Question</span> <i data-lucide="chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quiz Final Score Dashboard -->
+                    <div id="quiz-score-container" class="card hide text-center py-5">
+                        <div class="score-ring">
+                            <span id="quiz-final-score">4/5</span>
+                        </div>
+                        <h2 class="mt-4">Quiz Completed!</h2>
+                        <p id="quiz-feedback-text">Excellent job! You have a strong grasp of this topic.</p>
+                        <div class="score-actions mt-4">
+                            <button id="btn-quiz-restart" class="btn btn-primary">Try Again</button>
+                            <button id="btn-quiz-new" class="btn btn-secondary">New Quiz Topic</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. Summarizer Tab -->
+                <section class="tab-content" id="tab-summarize">
+                    <div class="card form-container">
+                        <h2><i data-lucide="file-text"></i> Smart Text Summarizer</h2>
+                        <p class="description">Paste text, articles, or chapters to distill them into structured notes, definitions, and takeaways.</p>
+                        
+                        <form id="form-summarize" class="edu-form">
+                            <div class="form-group">
+                                <label for="summarize-text-input">Source Text</label>
+                                <textarea id="summarize-text-input" placeholder="Paste your study materials or textbook chapters here..." rows="8" required></textarea>
+                                <span class="character-count" id="char-counter">0 characters</span>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i data-lucide="align-left"></i> Summarize Text
+                            </button>
+                        </form>
+                    </div>
+
+                    <div id="summarize-output" class="output-container card hide">
+                        <div class="output-header">
+                            <h3>Study Notes Summary</h3>
+                        </div>
+                        <div class="output-body">
+                            <div class="section-pane">
+                                <h4>Summary</h4>
+                                <p id="summarize-result-text" class="text-content"></p>
+                            </div>
+                            <div class="section-pane grid-2">
+                                <div class="sub-pane">
+                                    <h4><i data-lucide="check-circle-2"></i> Key Takeaways</h4>
+                                    <ul id="summarize-key-points" class="bullets-list"></ul>
+                                </div>
+                                <div class="sub-pane">
+                                    <h4><i data-lucide="book-marked"></i> Context Vocabulary</h4>
+                                    <div id="summarize-vocab" class="vocab-list"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6. Study Roadmap Tab -->
+                <section class="tab-content" id="tab-recommend">
+                    <div class="card form-container">
+                        <h2><i data-lucide="map"></i> Study Roadmap Planner</h2>
+                        <p class="description">Input what skill or academic topic you want to master, and EduGenie will plan a study timeline and recommend key steps.</p>
+                        
+                        <form id="form-recommend" class="edu-form">
+                            <div class="form-group">
+                                <label for="recommend-goal">What do you want to learn?</label>
+                                <input type="text" id="recommend-goal" placeholder="e.g., Deep Learning in Python, Calculus I, Conversational Spanish" required autocomplete="off">
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i data-lucide="calendar"></i> Plan Roadmap
+                            </button>
+                        </form>
+                    </div>
+
+                    <div id="recommend-output" class="output-container card hide">
+                        <div class="output-header">
+                            <h3 id="recommend-output-title">Personalized Curriculum</h3>
+                        </div>
+                        <div class="output-body">
+                            <p id="recommend-overview" class="overview-text mb-4"></p>
+                            
+                            <h4><i data-lucide="milestone"></i> Learning Milestones</h4>
+                            <div id="recommend-timeline" class="timeline-container">
+                                <!-- Timeline steps generated via JS -->
+                            </div>
+                            
+                            <div class="tips-container mt-4">
+                                <h4><i data-lucide="lightbulb"></i> AI Study Tips</h4>
+                                <ul id="recommend-tips" class="bullets-list text-accent"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Error/Alert Dialog -->
+    <div id="alert-toast" class="toast hide">
+        <i data-lucide="alert-circle" class="toast-icon"></i>
+        <div class="toast-body">
+            <strong id="toast-title">Error</strong>
+            <p id="toast-message">Something went wrong.</p>
+        </div>
+        <button id="btn-toast-close" class="toast-close"><i data-lucide="x"></i></button>
+    </div>
+
+    <!-- Global Loading Spinner Overlay -->
+    <div id="loading-overlay" class="loading-overlay hide">
+        <div class="spinner-container">
+            <div class="spinner-ring"></div>
+            <div class="spinner-core"></div>
+            <span id="loading-text" class="loading-label">Analyzing study materials...</span>
+        </div>
+    </div>
+
+    <!-- Script Entrypoint -->
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
